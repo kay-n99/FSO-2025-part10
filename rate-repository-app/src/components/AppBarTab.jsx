@@ -3,9 +3,9 @@ import Constants from "expo-constants";
 
 const AppBarTab = ({ style, name }) => {
   return (
-    <Pressable onPress={() => {}}>
-      <Text style={style.title}>{name}</Text>
-    </Pressable>
+   
+      <Text style={style}>{name}</Text>
+
   );
 };
 
