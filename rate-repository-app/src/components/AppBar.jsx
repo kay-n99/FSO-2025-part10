@@ -10,7 +10,6 @@ const styles = StyleSheet.create({
         height: 50,
         justifyContent: "center",
         flexDirection: 'row',
-        
     },
     title: {
         color: "white",
