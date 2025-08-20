@@ -1,6 +1,7 @@
 
 import { useQuery} from '@apollo/client';
 import { REPOSITORIES_QUERY } from '../graphql/queries';
+import { GET_REPOSITORY } from '../graphql/queries';
 
 const useRepositories = () => {
     const { data, loading, refetch } = useQuery(REPOSITORIES_QUERY, {
