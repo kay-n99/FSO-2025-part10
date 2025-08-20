@@ -39,9 +39,15 @@ const AppBar = () => {
         </Link>
 
         {data?.me ? (
-          <Link onPress={handleSignOut} component={Pressable}>
-            <AppBarTab style={styles.title} name={"Sign Out"} />
-          </Link>
+          <>
+            <Link to="/create-review" component={Pressable}>
+              <AppBarTab style={styles.title} name={"Create review"} />
+            </Link>
+
+            <Link onPress={handleSignOut} component={Pressable}>
+              <AppBarTab style={styles.title} name={"Sign Out"} />
+            </Link>
+          </>
         ) : (
           <Link to="/signin" component={Pressable}>
             <AppBarTab style={styles.title} name={"Sign In"} />
