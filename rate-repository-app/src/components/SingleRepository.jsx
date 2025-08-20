@@ -1,20 +1,46 @@
-import { View, ActivityIndicator } from 'react-native'
-import { useParams } from 'react-router-native'
-import useRepository from '../hooks/useRepository'
-import RepositoryItem from './RepositoryItem'
+import { FlatList, StyleSheet, View } from 'react-native';
+import { useParams } from 'react-router-native';
+import { useQuery } from '@apollo/client';
+import { GET_REPOSITORY } from '../graphql/queries';
+import RepositoryItem from './RepositoryItem';
+import ReviewItem from './ReviewItem';
+
+const styles = StyleSheet.create({
+  separator: {
+    height: 10,
+  },
+});
+
+const ItemSeparator = () => <View style={styles.separator} />;
+
+const RepositoryInfo = ({ repository }) => {
+  return <RepositoryItem item={repository} showGithubButton />;
+};
 
 const SingleRepository = () => {
-    const { id } = useParams()
-    const { repository, loading, error } = useRepository(id)
+  const { id } = useParams();
+  const { data, loading, error } = useQuery(GET_REPOSITORY, {
+    variables: { id },
+    fetchPolicy: 'cache-and-network',
+  });
 
-    if (loading) return <ActivityIndicator />
-    if (error) return <Text>Error: { error.message}</Text>
+  if (loading) return null;
+  if (error) return <Text>Error: {error.message}</Text>;
 
-    return(
-        <View>
-            <RepositoryItem item={repository} showGithubLink />
-        </View>
-    )
-}
+  const repository = data.repository;
+  const reviews = repository.reviews
+    ? repository.reviews.edges.map((edge) => edge.node)
+    : [];
 
-export default SingleRepository
+  return (
+    <FlatList
+      data={reviews}
+      renderItem={({ item }) => <ReviewItem review={item} />}
+      keyExtractor={({ id }) => id}
+      ItemSeparatorComponent={ItemSeparator}
+      ListHeaderComponent={() => <RepositoryInfo repository={repository} />}
+    />
+  );
+};
+
+export default SingleRepository;
