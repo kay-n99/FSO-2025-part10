@@ -27,6 +27,7 @@ export const RepositoryListContainer = ({
   setSortOrder,
   searchKeyword,
   setSearchKeyword,
+  onEndReach,
 }) => {
   const repositoryNodes = repositories
     ? repositories.edges.map((edge) => edge.node)
@@ -61,6 +62,8 @@ export const RepositoryListContainer = ({
           </Picker>
         </View>
       }
+      onEndReached={onEndReach}
+      onEndReachedThreshold={0.5}
     />
   );
 };
@@ -75,11 +78,17 @@ const RepositoryList = () => {
     highest: { orderBy: "RATING_AVERAGE", orderDirection: "DESC" },
     lowest: { orderBy: "RATING_AVERAGE", orderDirection: "ASC" },
   };
-  const { repositories } = useRepositories({
+  const { repositories, fetchMore } = useRepositories({
+    
     ...orderVariables[sortOrder],
     searchKeyword: debouncedSearchKeyword,
+    first: 5,
   });
   const navigate = useNavigate();
+
+  const onEndReach = () => {
+    fetchMore()
+  }
 
   return (
     <RepositoryListContainer
@@ -89,6 +98,7 @@ const RepositoryList = () => {
       setSortOrder={setSortOrder}
       searchKeyword={searchKeyword}
       setSearchKeyword={setSearchKeyword}
+      onEndReach={onEndReach}
     />
   );
 };
